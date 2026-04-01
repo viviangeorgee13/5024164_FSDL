@@ -1,19 +1,21 @@
-import {useState} from "react";
-
-function Display({value}){
-return <h3>Count: {value}</h3>;
+function Part2({ tasks, deleteTask }) {
+  return (
+    <div style={styles.card}>
+      <h2>Tasks</h2>
+      <ul>
+        {tasks.map((t, i) => (
+          <li key={i}>
+            {t}
+            <button onClick={() => deleteTask(i)}>❌</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-function Part2(){
-const[count,setCount]=useState(0);
-
-return(
-<div style={{border:"1px solid black",padding:"10px",margin:"10px"}}>
-<h2>Part 2: State & Props</h2>
-<button onClick={()=>setCount(count+1)}>Increase</button>
-<Display value={count}/>
-</div>
-);
-}
+const styles={
+card:{padding:"20px",background:"#1c1c1c",color:"#fff",borderRadius:"10px"}
+};
 
 export default Part2;

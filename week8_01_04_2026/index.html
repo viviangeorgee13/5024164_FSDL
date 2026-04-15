@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+<meta charset="UTF-8">
+<title>AngularJS Exp 8</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+<style>
+body {
+  font-family: Arial;
+  background: #1e293b;
+  color: white;
+  text-align: center;
+  padding: 30px;
+}
+
+.box {
+  background: #0f172a;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  margin: auto;
+}
+
+input {
+  margin: 5px;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+}
+
+button {
+  padding: 8px 12px;
+  margin-top: 10px;
+  background: #38bdf8;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  margin-top: 15px;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid white;
+  padding: 8px;
+}
+</style>
+</head>
+
+<body ng-controller="ctrl">
+
+<div class="box">
+  <h2>Student Record</h2>
+
+  <!-- Form -->
+  <form name="studentForm">
+
+    <input type="text" placeholder="Name"
+      ng-model="student.name" required>
+    <br>
+
+    <input type="number" placeholder="Age"
+      ng-model="student.age" required>
+    <br>
+
+    <input type="text" placeholder="Course"
+      ng-model="student.course" required>
+    <br>
+
+    <!-- Event -->
+    <button ng-click="addStudent()" 
+      ng-disabled="studentForm.$invalid">
+      Add Student
+    </button>
+
+  </form>
+
+  <!-- Table -->
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Course</th>
+    </tr>
+
+    <tr ng-repeat="s in students">
+      <td>{{s.name}}</td>
+      <td>{{s.age}}</td>
+      <td>{{s.course}}</td>
+    </tr>
+  </table>
+
+</div>
+
+<script>
+angular.module("app", [])
+.controller("ctrl", function($scope){
+
+  $scope.students = [];
+
+  $scope.addStudent = function(){
+    $scope.students.push($scope.student);
+    $scope.student = {};
+  };
+
+});
+</script>
+
+</body>
+</html>

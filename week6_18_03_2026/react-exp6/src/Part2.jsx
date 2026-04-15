@@ -1,21 +1,18 @@
-function Part2({ tasks, deleteTask }) {
+import { useState } from "react";
+
+function Part2() {
+  const [count, setCount] = useState(0);
+
   return (
-    <div style={styles.card}>
-      <h2>Tasks</h2>
-      <ul>
-        {tasks.map((t, i) => (
-          <li key={i}>
-            {t}
-            <button onClick={() => deleteTask(i)}>❌</button>
-          </li>
-        ))}
-      </ul>
+    <div className="container">
+      <h2>Part 2: State + Events</h2>
+
+      <p>Count: {count}</p>
+
+      <button onClick={() => setCount(count + 1)}>Increase</button>
+      <button onClick={() => setCount(count - 1)}>Decrease</button>
     </div>
   );
 }
-
-const styles={
-card:{padding:"20px",background:"#1c1c1c",color:"#fff",borderRadius:"10px"}
-};
 
 export default Part2;

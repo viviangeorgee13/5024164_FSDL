@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>JavaScript Input Example</title>
+
+<style>
+body {font-family: Arial; background:#f2f2f2; padding:30px;}
+.container {background:white; padding:25px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.2);}
+input {padding:8px; margin:5px 0; width:100%;}
+button {padding:10px; background:#007bff; color:white; border:none; cursor:pointer;}
+button:hover {background:#0056b3;}
+#output {margin-top:15px; font-weight:bold;}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+<h2>JavaScript Practical</h2>
+
+<label>Enter First Number:</label>
+<input type="number" id="num1">
+
+<label>Enter Second Number:</label>
+<input type="number" id="num2">
+
+<button onclick="calculate()">Calculate</button>
+
+<p id="output"></p>
+</div>
+
+<script>
+
+function calculate(){
+
+// VARIABLES
+let a = parseInt(document.getElementById("num1").value);
+let b = parseInt(document.getElementById("num2").value);
+
+// OPERATORS
+let sum = a + b;
+let resultText = "Sum: " + sum + "<br>";
+
+// CONDITIONS
+if(sum > 50){
+  resultText += "Sum is greater than 50<br>";
+} else {
+  resultText += "Sum is 50 or less<br>";
+}
+
+// LOOP
+resultText += "Counting from 1 to 5:<br>";
+for(let i=1; i<=5; i++){
+  resultText += i + " ";
+}
+
+// OBJECT
+let student = {
+  name: "Vivian",
+  course: "BSc IT"
+};
+resultText += "<br>Student: " + student.name;
+
+// CLASS
+class Calculator{
+  constructor(x,y){
+    this.x = x;
+    this.y = y;
+  }
+  multiply(){
+    return this.x * this.y;
+  }
+}
+
+let calc = new Calculator(a,b);
+resultText += "<br>Multiplication: " + calc.multiply();
+
+// OUTPUT
+document.getElementById("output").innerHTML = resultText;
+
+}
+
+</script>
+
+</body>
+</html>

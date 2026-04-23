@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>GreenChip - Mini Project</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#13ec5b",
+            darkbg: "#102216"
+          }
+        }
+      }
+    }
+  </script>
+
+</head>
+
+<body class="bg-darkbg text-white font-[Space_Grotesk]">
+
+<!-- ================= HERO ================= -->
+<section class="min-h-screen flex flex-col justify-center items-center text-center px-6">
+  <h1 class="text-5xl font-bold mb-6">
+    Electronics that <span class="text-primary">vanish</span>
+  </h1>
+  <p class="text-gray-400 max-w-xl mb-6">
+    High-performance biodegradable electronics with zero waste.
+  </p>
+  <button class="bg-primary text-black px-6 py-3 rounded-lg font-bold">
+    Request Demo
+  </button>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="py-20 px-6">
+  <h2 class="text-3xl font-bold text-center mb-12">Features</h2>
+
+  <div class="grid md:grid-cols-3 gap-8">
+
+    <div class="bg-white/5 p-6 rounded-xl">
+      <h3 class="text-xl font-bold text-primary mb-2">Bio-Resorbable</h3>
+      <p class="text-gray-400">Dissolves completely in 60 days.</p>
+    </div>
+
+    <div class="bg-white/5 p-6 rounded-xl">
+      <h3 class="text-xl font-bold text-primary mb-2">Zero Waste</h3>
+      <p class="text-gray-400">Closed-loop eco-friendly process.</p>
+    </div>
+
+    <div class="bg-white/5 p-6 rounded-xl">
+      <h3 class="text-xl font-bold text-primary mb-2">Smart Lifespan</h3>
+      <p class="text-gray-400">Programmable degradation cycle.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= TIMELINE ================= -->
+<section class="py-20 px-6 bg-black/20">
+  <h2 class="text-3xl font-bold text-center mb-12">Lifecycle</h2>
+
+  <div class="max-w-2xl mx-auto space-y-8">
+
+    <div>
+      <h3 class="text-xl font-bold text-primary">Day 1</h3>
+      <p class="text-gray-400">Fully functional chip at 100% efficiency.</p>
+    </div>
+
+    <div>
+      <h3 class="text-xl font-bold text-primary">Day 30</h3>
+      <p class="text-gray-400">Decomposition process starts.</p>
+    </div>
+
+    <div>
+      <h3 class="text-xl font-bold text-primary">Day 60</h3>
+      <p class="text-gray-400">Completely biodegradable. Zero trace.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= CONTACT FORM ================= -->
+<section class="py-20 px-6">
+  <h2 class="text-3xl font-bold text-center mb-12">Request Demo</h2>
+
+  <form id="demoForm" class="max-w-xl mx-auto space-y-4">
+
+    <input type="text" placeholder="Full Name" required
+      class="w-full p-3 rounded bg-white/10 border border-white/10">
+
+    <input type="email" placeholder="Email" required
+      class="w-full p-3 rounded bg-white/10 border border-white/10">
+
+    <input type="text" placeholder="Company"
+      class="w-full p-3 rounded bg-white/10 border border-white/10">
+
+    <textarea placeholder="Message"
+      class="w-full p-3 rounded bg-white/10 border border-white/10"></textarea>
+
+    <button type="submit"
+      class="w-full bg-primary text-black py-3 rounded font-bold">
+      Submit
+    </button>
+
+  </form>
+
+  <p id="responseMsg" class="text-center mt-4 text-green-400"></p>
+
+</section>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+  document.getElementById("demoForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    document.getElementById("responseMsg").innerText = "Form submitted (backend not connected yet)";
+  });
+</script>
+
+</body>
+</html>

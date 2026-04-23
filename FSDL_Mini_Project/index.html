@@ -121,9 +121,27 @@
 
 <!-- ================= SCRIPT ================= -->
 <script>
-  document.getElementById("demoForm").addEventListener("submit", function(e) {
+  document.getElementById("demoForm").addEventListener("submit", async function(e) {
     e.preventDefault();
-    document.getElementById("responseMsg").innerText = "Form submitted (backend not connected yet)";
+
+    const formData = {
+      name: document.querySelector("input[placeholder='Full Name']").value,
+      email: document.querySelector("input[placeholder='Email']").value,
+      company: document.querySelector("input[placeholder='Company']").value,
+      message: document.querySelector("textarea").value
+    };
+
+    const res = await fetch("/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await res.json();
+
+    document.getElementById("responseMsg").innerText = data.message;
   });
 </script>
 

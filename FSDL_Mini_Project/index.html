@@ -1,169 +1,177 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GreenChip</title>
-
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        primary: "#13ec5b",
-        darkbg: "#0f2a1d"
-      }
-    }
-  }
-}
-</script>
+<style>
+body { background:#0b2a1c; color:white; }
+.card { background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; }
+</style>
 </head>
 
-<body class="bg-darkbg text-white">
+<body class="text-center">
 
 <!-- HERO -->
-<section class="min-h-screen flex flex-col justify-center items-center text-center">
+<section class="py-20">
   <h1 class="text-5xl font-bold">
-    Electronics that <span class="text-primary">vanish</span>
+    Electronics that <span class="text-green-400">vanish</span>
   </h1>
-  <p class="text-gray-400 mt-4">
-    High-performance biodegradable electronics with zero waste.
-  </p>
 </section>
 
-<!-- FEATURES -->
-<section class="py-16 text-center">
-  <h2 class="text-3xl font-bold mb-10">Features</h2>
-  <div class="grid md:grid-cols-3 gap-6 px-10">
-    <div class="bg-white/5 p-6 rounded">Bio-Resorbable</div>
-    <div class="bg-white/5 p-6 rounded">Zero Waste</div>
-    <div class="bg-white/5 p-6 rounded">Smart Lifespan</div>
-  </div>
+<!-- SEARCH -->
+<section class="py-6">
+  <input id="searchBox" placeholder="Search products..."
+    class="p-3 w-96 bg-green-100 text-black rounded">
 </section>
 
-<!-- TIMELINE -->
-<section class="py-16 text-center">
-  <h2 class="text-3xl font-bold mb-6">Lifecycle</h2>
-  <p>Day 1 → Active</p>
-  <p>Day 30 → Decomposition</p>
-  <p>Day 60 → Fully biodegradable</p>
+<div id="results" class="flex flex-wrap justify-center gap-4 px-10"></div>
+
+<!-- ORDER -->
+<section class="py-10">
+  <input id="name" placeholder="Name" class="p-3 w-96 bg-green-100 text-black rounded"><br>
+  <input id="email" placeholder="Email" class="p-3 w-96 bg-green-100 text-black rounded mt-2"><br>
+  <input id="selectedProduct" placeholder="Product (exact name)" class="p-3 w-96 bg-green-100 text-black rounded mt-2"><br>
+
+  <button onclick="order()" class="bg-green-500 px-4 py-2 mt-3 rounded">Order</button>
+
+  <div id="response" class="mt-4"></div>
 </section>
 
-<!-- FORM -->
-<section class="py-16 text-center">
-  <h2 class="text-3xl font-bold mb-6">Request Demo</h2>
+<!-- TRACK -->
+<section class="py-10">
+  <input id="trackId" placeholder="Search by ID" class="p-3 w-96 bg-green-100 text-black rounded"><br>
+  <input id="trackProduct" placeholder="Exact Product Name" class="p-3 w-96 bg-green-100 text-black rounded mt-2"><br>
 
-  <form id="demoForm" class="space-y-4 max-w-xl mx-auto">
-    <input id="fullName" placeholder="Full Name" class="w-full p-3 bg-white/10 rounded">
-    <input id="workEmail" placeholder="Email" class="w-full p-3 bg-white/10 rounded">
-    <input id="companyName" placeholder="Company" class="w-full p-3 bg-white/10 rounded">
-    <textarea id="message" placeholder="Message" class="w-full p-3 bg-white/10 rounded"></textarea>
+  <button onclick="track()" class="bg-gray-700 px-4 py-2 mt-3 rounded">Search</button>
 
-    <button class="w-full bg-primary text-black py-3 rounded">Submit</button>
-  </form>
-
-  <div id="responseBox" class="mt-3 text-green-400"></div>
-  <div id="aiBox" class="text-yellow-400"></div>
+  <div id="table"></div>
 </section>
 
-<!-- ADMIN -->
-<div class="text-center mt-10">
-  <button onclick="loadRequests()" class="bg-primary px-6 py-2 rounded">
-    View Requests
-  </button>
-  <p id="count"></p>
-</div>
-
-<div id="requestsList" class="max-w-3xl mx-auto mt-6 space-y-3"></div>
-
-<!-- ANALYTICS -->
-<h2 class="text-center mt-10">Analytics</h2>
-<canvas id="chart"></canvas>
-
-<!-- CHATBOT -->
-<div class="fixed bottom-5 right-5 w-72 bg-black/80 p-3 rounded">
-  <div class="text-primary font-bold mb-2">AI Assistant</div>
-  <div id="chatMessages" class="h-40 overflow-y-auto text-sm mb-2"></div>
-  <input id="chatInput" class="w-full p-2 text-black" placeholder="Ask something...">
+<!-- CHAT -->
+<div class="fixed bottom-5 right-5 w-96 bg-black p-4 rounded-xl">
+  <div class="text-green-400 font-bold">Nexa AI</div>
+  <div id="chatBox" class="h-52 overflow-auto text-left"></div>
+  <input id="chatInput" placeholder="Ask..." class="w-full p-2 text-black mt-2">
 </div>
 
 <script>
 
-// FORM
-demoForm.addEventListener("submit", async e=>{
-  e.preventDefault();
+let products = [];
 
-  const res = await fetch("/submit",{
+// LOAD PRODUCTS
+async function load() {
+  const res = await fetch("/products");
+  products = await res.json();
+}
+
+// 🔥 SEARCH FIX (THIS WAS YOUR ISSUE)
+searchBox.addEventListener("input", () => {
+  const val = searchBox.value.toLowerCase();
+
+  if (!val) {
+    results.innerHTML = "";
+    return;
+  }
+
+  const filtered = products.filter(p =>
+    p.toLowerCase().includes(val)
+  );
+
+  results.innerHTML = filtered.map(p => `
+    <div class="card w-64">
+      <h3>${p}</h3>
+      <button onclick="selectProduct('${p}')"
+        class="bg-green-500 px-3 py-1 mt-2 rounded">
+        Select
+      </button>
+    </div>
+  `).join("");
+});
+
+// SELECT PRODUCT
+function selectProduct(name) {
+  selectedProduct.value = name;
+}
+
+// ORDER
+async function order() {
+  const res = await fetch("/order", {
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body: JSON.stringify({
-      name: fullName.value,
-      email: workEmail.value,
-      company: companyName.value,
-      message: message.value
+      name: name.value,
+      email: email.value,
+      product: selectedProduct.value
     })
   });
 
-  const r = await res.json();
-  responseBox.innerText = r.message;
-  aiBox.innerText = r.type + " | Score: " + r.priority;
-
-  demoForm.reset();
-});
-
-// LOAD REQUESTS
-async function loadRequests(){
-  const res = await fetch("/requests");
   const data = await res.json();
 
-  count.innerText = "Total Requests: " + data.count;
-  requestsList.innerHTML = "";
-
-  let hot=0,warm=0,cold=0;
-
-  data.data.forEach(r=>{
-    if(r.type.includes("Hot")) hot++;
-    else if(r.type.includes("Warm")) warm++;
-    else cold++;
-
-    const d=document.createElement("div");
-    d.className="bg-white/5 p-3 rounded";
-    d.innerText=`${r.name} (${r.email}) - ${r.type}`;
-    requestsList.appendChild(d);
-  });
-
-  new Chart(chart,{
-    type:"bar",
-    data:{
-      labels:["Hot","Warm","Cold"],
-      datasets:[{data:[hot,warm,cold]}]
-    }
-  });
+  response.innerHTML = `
+    ${data.message}<br>
+    ID: ${data.id}<br>
+    Status: ${data.status}<br>
+    ETA: ${data.eta}
+  `;
 }
 
-// CHATBOT
-chatInput.addEventListener("keypress", async e=>{
-  if(e.key==="Enter"){
+// TRACK
+async function track() {
+  const res = await fetch(`/track?id=${trackId.value}&product=${trackProduct.value}`);
+  const data = await res.json();
+
+  if (data.error) {
+    table.innerHTML = `<div class="text-red-400">${data.error}</div>`;
+    return;
+  }
+
+  let html = `
+  <table class="mx-auto border border-green-400 mt-4">
+    <tr class="bg-green-700">
+      <th class="border px-4">ID</th>
+      <th class="border px-4">Product</th>
+      <th class="border px-4">Status</th>
+      <th class="border px-4">ETA</th>
+    </tr>
+  `;
+
+  data.forEach(r => {
+    html += `
+    <tr class="border">
+      <td class="border px-4">${r.id}</td>
+      <td class="border px-4">${r.product}</td>
+      <td class="border px-4">${r.status}</td>
+      <td class="border px-4">${r.eta}</td>
+    </tr>`;
+  });
+
+  html += "</table>";
+
+  table.innerHTML = html;
+}
+
+// CHAT
+chatInput.addEventListener("keypress", async e => {
+  if(e.key === "Enter"){
     const msg = chatInput.value;
 
-    chatMessages.innerHTML += `<div>> ${msg}</div>`;
+    chatBox.innerHTML += `<div>> ${msg}</div>`;
 
     const res = await fetch("/chat",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({message:msg})
+      body: JSON.stringify({message: msg})
     });
 
     const data = await res.json();
 
-    chatMessages.innerHTML += `<div class="text-primary">${data.reply}</div>`;
-
+    chatBox.innerHTML += `<div style="color:lightgreen;">${data.reply}</div>`;
     chatInput.value="";
   }
 });
+
+load();
 
 </script>
 

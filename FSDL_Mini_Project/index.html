@@ -1,177 +1,808 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>GreenChip</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-body { background:#0b2a1c; color:white; }
-.card { background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; }
+
+body {
+
+  background:
+    radial-gradient(circle at top left,
+    #184d35 0%,
+    #021c13 45%),
+    radial-gradient(circle at bottom right,
+    #1d5b41 0%,
+    #021c13 35%);
+
+  color:white;
+
+  overflow-x:hidden;
+}
+
+.glass {
+
+  background:rgba(255,255,255,0.05);
+
+  backdrop-filter:blur(12px);
+
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.product-card:hover {
+
+  transform:translateY(-5px);
+
+  transition:0.3s;
+
+  box-shadow:
+    0 0 25px rgba(0,255,120,0.2);
+}
+
+.chat-fullscreen {
+
+  width:95vw !important;
+
+  height:90vh !important;
+
+  right:2vw !important;
+
+  bottom:2vh !important;
+}
+
+.active-category {
+
+  background:linear-gradient(
+    180deg,
+    rgba(34,197,94,0.9),
+    rgba(22,163,74,0.95)
+  ) !important;
+
+  color:#021c13 !important;
+
+  border:1px solid rgba(134,239,172,0.7) !important;
+
+  transform:translateY(-3px);
+
+  box-shadow:
+    0 0 25px rgba(34,197,94,0.45);
+}
+
+.chat-solid {
+
+  background:
+    linear-gradient(
+      135deg,
+      #032617,
+      #0b3523,
+      #123f2b
+    ) !important;
+
+  backdrop-filter:none !important;
+}
+
 </style>
+
 </head>
 
-<body class="text-center">
+<body>
 
-<!-- HERO -->
-<section class="py-20">
-  <h1 class="text-5xl font-bold">
-    Electronics that <span class="text-green-400">vanish</span>
-  </h1>
+<section class="text-center py-20">
+
+<div class="inline-block px-5 py-2 rounded-full bg-green-500/20 border border-green-400/30 text-green-300 mb-6">
+Sustainable Technology Marketplace
+</div>
+
+<h1 class="text-6xl font-extrabold">
+Electronics that
+<span class="text-green-400">vanish</span>
+</h1>
+
+<p class="mt-6 text-green-100 text-xl max-w-3xl mx-auto">
+GreenChip delivers biodegradable electronics designed to reduce e-waste.
+</p>
+
 </section>
 
-<!-- SEARCH -->
-<section class="py-6">
-  <input id="searchBox" placeholder="Search products..."
-    class="p-3 w-96 bg-green-100 text-black rounded">
+<section class="max-w-7xl mx-auto px-6">
+
+<div class="glass rounded-3xl p-8">
+
+<h2 class="text-4xl font-bold text-green-300 mb-6">
+Search Eco Products
+</h2>
+
+<input
+id="searchBox"
+placeholder="Search eco products..."
+class="w-full p-5 rounded-2xl bg-green-100 text-black text-xl outline-none"
+>
+
+<div class="mt-6 overflow-x-auto scrollbar-hide">
+
+<div
+id="categories"
+class="flex gap-3 whitespace-nowrap min-w-max"
+></div>
+
+</div>
+
+</div>
+
 </section>
 
-<div id="results" class="flex flex-wrap justify-center gap-4 px-10"></div>
+<section class="max-w-7xl mx-auto px-6 mt-10">
 
-<!-- ORDER -->
-<section class="py-10">
-  <input id="name" placeholder="Name" class="p-3 w-96 bg-green-100 text-black rounded"><br>
-  <input id="email" placeholder="Email" class="p-3 w-96 bg-green-100 text-black rounded mt-2"><br>
-  <input id="selectedProduct" placeholder="Product (exact name)" class="p-3 w-96 bg-green-100 text-black rounded mt-2"><br>
+<div
+id="results"
+class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+></div>
 
-  <button onclick="order()" class="bg-green-500 px-4 py-2 mt-3 rounded">Order</button>
-
-  <div id="response" class="mt-4"></div>
 </section>
 
-<!-- TRACK -->
-<section class="py-10">
-  <input id="trackId" placeholder="Search by ID" class="p-3 w-96 bg-green-100 text-black rounded"><br>
-  <input id="trackProduct" placeholder="Exact Product Name" class="p-3 w-96 bg-green-100 text-black rounded mt-2"><br>
+<section class="max-w-5xl mx-auto px-6 py-16">
 
-  <button onclick="track()" class="bg-gray-700 px-4 py-2 mt-3 rounded">Search</button>
+<div class="glass rounded-3xl p-8">
 
-  <div id="table"></div>
+<h2 class="text-4xl font-bold text-green-300 mb-6">
+Place Order
+</h2>
+
+<div class="grid md:grid-cols-2 gap-4">
+
+<input
+id="name"
+placeholder="Name"
+class="p-4 rounded-xl bg-green-100 text-black"
+>
+
+<input
+id="email"
+placeholder="Email"
+class="p-4 rounded-xl bg-green-100 text-black"
+>
+
+</div>
+
+<input
+id="selectedProduct"
+placeholder="Selected Product"
+class="p-4 rounded-xl bg-green-100 text-black w-full mt-4"
+>
+
+<button
+onclick="order()"
+class="bg-green-500 hover:bg-green-400 px-8 py-3 rounded-xl mt-5 font-bold"
+>
+Place Order
+</button>
+
+<div id="response" class="mt-6"></div>
+
+</div>
+
 </section>
 
-<!-- CHAT -->
-<div class="fixed bottom-5 right-5 w-96 bg-black p-4 rounded-xl">
-  <div class="text-green-400 font-bold">Nexa AI</div>
-  <div id="chatBox" class="h-52 overflow-auto text-left"></div>
-  <input id="chatInput" placeholder="Ask..." class="w-full p-2 text-black mt-2">
+<section class="max-w-6xl mx-auto px-6 pb-16">
+
+<div class="glass rounded-3xl p-8">
+
+<h2 class="text-4xl font-bold text-green-300 mb-6">
+Track Orders
+</h2>
+
+<div class="grid md:grid-cols-2 gap-4">
+
+<input
+id="trackId"
+placeholder="Request ID"
+class="p-4 rounded-xl bg-green-100 text-black"
+>
+
+<input
+id="trackProduct"
+placeholder="Exact Product Name"
+class="p-4 rounded-xl bg-green-100 text-black"
+>
+
+</div>
+
+<button
+onclick="track()"
+class="bg-emerald-600 hover:bg-emerald-500 px-8 py-3 rounded-xl mt-5 font-bold"
+>
+Search
+</button>
+
+<div id="table" class="mt-8 overflow-auto"></div>
+
+</div>
+
+</section>
+
+<section class="max-w-7xl mx-auto px-6 pb-16">
+
+<div class="glass rounded-3xl p-8">
+
+<button
+id="popularToggle"
+class="bg-green-500 hover:bg-green-400 px-6 py-3 rounded-xl font-bold"
+>
+View Popular Products
+</button>
+
+<div id="popularSection" class="hidden mt-8">
+
+<h2 class="text-4xl font-bold text-green-300 mb-8">
+Our Popular Products
+</h2>
+
+<div id="popularProducts"></div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="max-w-7xl mx-auto px-6 pb-20">
+
+<div class="glass rounded-3xl p-8">
+
+<button
+id="historyToggle"
+class="bg-green-500 hover:bg-green-400 px-6 py-3 rounded-xl font-bold"
+>
+View Previous Orders
+</button>
+
+<div id="historySection" class="hidden mt-8">
+
+<h2 class="text-4xl font-bold text-green-300 mb-8">
+Previous Orders
+</h2>
+
+<div id="historyTable"></div>
+
+</div>
+
+</div>
+
+</section>
+
+<button
+id="chatToggle"
+class="fixed bottom-6 right-6 w-16 h-16 rounded-full bg-green-500 text-black text-3xl z-50"
+>
+💬
+</button>
+
+<div
+id="chatContainer"
+class="fixed bottom-24 right-6 w-96 h-[650px] glass rounded-3xl p-5 hidden z-50"
+>
+
+<div class="flex justify-between items-center">
+
+<div>
+
+<h2 class="text-3xl font-bold text-green-300">
+Nexa AI
+</h2>
+
+<p class="text-green-100 text-sm">
+Sustainable Tech Assistant
+</p>
+
+</div>
+
+<div class="flex gap-2">
+
+<button
+id="fullscreenChat"
+class="bg-green-500 px-3 py-1 rounded-lg text-black"
+>
+⬜
+</button>
+
+<button
+id="closeChat"
+class="bg-red-500 px-3 py-1 rounded-lg"
+>
+✕
+</button>
+
+</div>
+
+</div>
+
+<div
+id="chatBox"
+class="h-[500px] overflow-auto mt-4 space-y-3 pr-2"
+></div>
+
+<input
+id="chatInput"
+placeholder="Ask Nexa anything..."
+class="w-full p-4 rounded-xl text-black mt-4"
+>
+
 </div>
 
 <script>
 
 let products = [];
 
-// LOAD PRODUCTS
-async function load() {
-  const res = await fetch("/products");
+const categoriesDiv =
+  document.getElementById("categories");
+
+async function loadProducts() {
+
+  const res =
+    await fetch("/products");
+
   products = await res.json();
 }
 
-// 🔥 SEARCH FIX (THIS WAS YOUR ISSUE)
-searchBox.addEventListener("input", () => {
-  const val = searchBox.value.toLowerCase();
+loadProducts();
 
-  if (!val) {
-    results.innerHTML = "";
+results.innerHTML = `
+
+<div class="glass rounded-3xl p-10 text-center col-span-full">
+
+<div class="text-3xl font-bold text-green-300">
+Select a category tab or search for a product
+</div>
+
+</div>
+
+`;
+
+async function loadCategories() {
+
+  const res =
+    await fetch("/categories");
+
+  const categories =
+    await res.json();
+
+  categories.unshift("All");
+
+  categoriesDiv.innerHTML =
+    categories.map(cat => `
+
+      <button
+      onclick="filterCategory('${cat}', this)"
+      class="category-btn bg-green-900/40 border border-green-400/20 text-green-200 px-6 py-3 rounded-t-2xl rounded-b-md text-sm whitespace-nowrap transition-all duration-300 hover:bg-green-500/20 hover:text-green-100 shadow-lg"
+      >
+      ${cat}
+      </button>
+
+    `).join("");
+}
+
+loadCategories();
+
+function filterCategory(category, element) {
+
+  document
+    .querySelectorAll(".category-btn")
+    .forEach(btn => {
+      btn.classList.remove("active-category");
+    });
+
+  element.classList.add("active-category");
+
+  if (category === "All") {
+
+    renderProducts(products);
+
     return;
   }
 
-  const filtered = products.filter(p =>
-    p.toLowerCase().includes(val)
-  );
+  const filtered =
+    products.filter(
+      p => p.category === category
+    );
 
-  results.innerHTML = filtered.map(p => `
-    <div class="card w-64">
-      <h3>${p}</h3>
-      <button onclick="selectProduct('${p}')"
-        class="bg-green-500 px-3 py-1 mt-2 rounded">
-        Select
+  renderProducts(filtered);
+}
+
+function renderProducts(data) {
+
+  results.innerHTML =
+    data.map(p => `
+
+      <div class="glass rounded-3xl p-6 product-card">
+
+      <div class="flex justify-between items-start">
+
+      <div>
+
+      <div class="text-2xl font-bold text-green-300">
+      ${p.name}
+      </div>
+
+      <div class="text-4xl font-extrabold mt-3">
+      ₹${p.price}
+      </div>
+
+      </div>
+
+      <div class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm">
+      ${p.category}
+      </div>
+
+      </div>
+
+      <div class="mt-5 text-green-100">
+      Eco Score: ${p.ecoScore}/10
+      </div>
+
+      <button
+      onclick="selectProduct('${p.name}')"
+      class="bg-green-500 hover:bg-green-400 px-5 py-2 rounded-xl mt-5 font-bold"
+      >
+      Select
       </button>
+
+      </div>
+
+    `).join("");
+}
+
+searchBox.addEventListener("input", ()=>{
+
+  const val =
+    searchBox.value.toLowerCase().trim();
+
+  if (!val) {
+
+    results.innerHTML = `
+
+    <div class="glass rounded-3xl p-10 text-center col-span-full">
+
+    <div class="text-3xl font-bold text-green-300">
+    Select a category tab or search for a product
     </div>
-  `).join("");
+
+    </div>
+
+    `;
+
+    return;
+  }
+
+  const filtered =
+    products.filter(p =>
+
+      p.name.toLowerCase().includes(val) ||
+      p.category.toLowerCase().includes(val)
+
+    );
+
+  renderProducts(filtered);
 });
 
-// SELECT PRODUCT
 function selectProduct(name) {
+
   selectedProduct.value = name;
 }
 
-// ORDER
 async function order() {
-  const res = await fetch("/order", {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({
-      name: name.value,
-      email: email.value,
-      product: selectedProduct.value
-    })
-  });
+
+  const res =
+    await fetch("/order", {
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body: JSON.stringify({
+
+        name:document.getElementById("name").value,
+
+        email:document.getElementById("email").value,
+
+        product:selectedProduct.value
+
+      })
+
+    });
 
   const data = await res.json();
 
   response.innerHTML = `
-    ${data.message}<br>
-    ID: ${data.id}<br>
-    Status: ${data.status}<br>
-    ETA: ${data.eta}
+
+    <div class="glass rounded-2xl p-6">
+
+    <div class="text-3xl font-bold text-green-300 mb-5">
+    Order Confirmed
+    </div>
+
+    <div class="space-y-3 text-xl">
+
+    <div>Request ID: ${data.id}</div>
+    <div>Status: ${data.status}</div>
+    <div>ETA: ${data.eta}</div>
+    <div>Price: ₹${data.price}</div>
+
+    </div>
+
+    </div>
+
   `;
+
+  loadHistory();
+  loadPopularProducts();
 }
 
-// TRACK
 async function track() {
-  const res = await fetch(`/track?id=${trackId.value}&product=${trackProduct.value}`);
+
+  const res =
+    await fetch("/track", {
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body: JSON.stringify({
+
+        id:trackId.value,
+
+        product:trackProduct.value
+
+      })
+
+    });
+
   const data = await res.json();
 
   if (data.error) {
-    table.innerHTML = `<div class="text-red-400">${data.error}</div>`;
+
+    table.innerHTML =
+      `<div class="text-red-300 text-xl">${data.error}</div>`;
+
     return;
   }
 
   let html = `
-  <table class="mx-auto border border-green-400 mt-4">
-    <tr class="bg-green-700">
-      <th class="border px-4">ID</th>
-      <th class="border px-4">Product</th>
-      <th class="border px-4">Status</th>
-      <th class="border px-4">ETA</th>
+
+    <table class="w-full text-center overflow-hidden">
+
+    <tr class="bg-green-900/40 text-green-300">
+
+    <th class="p-4">ID</th>
+    <th class="p-4">Product</th>
+    <th class="p-4">Status</th>
+    <th class="p-4">Date</th>
+
     </tr>
+
   `;
 
-  data.forEach(r => {
+  data.forEach(order => {
+
     html += `
-    <tr class="border">
-      <td class="border px-4">${r.id}</td>
-      <td class="border px-4">${r.product}</td>
-      <td class="border px-4">${r.status}</td>
-      <td class="border px-4">${r.eta}</td>
-    </tr>`;
+
+      <tr class="bg-white/5">
+
+      <td class="p-4">${order.requestId}</td>
+      <td class="p-4">${order.product}</td>
+      <td class="p-4">${order.status}</td>
+      <td class="p-4">
+      ${new Date(order.createdAt).toLocaleDateString("en-GB")}
+      </td>
+
+      </tr>
+
+    `;
   });
 
-  html += "</table>";
+  html += `</table>`;
 
   table.innerHTML = html;
 }
 
-// CHAT
+async function loadHistory() {
+
+  const res =
+    await fetch("/history");
+
+  const data = await res.json();
+
+  let html = `
+
+  <table class="w-full text-center overflow-hidden">
+
+  <tr class="bg-green-900/40 text-green-300">
+
+  <th class="p-4">Customer</th>
+  <th class="p-4">Email</th>
+  <th class="p-4">Product</th>
+  <th class="p-4">Status</th>
+  <th class="p-4">Date</th>
+
+  </tr>
+
+  `;
+
+  data.forEach(order => {
+
+    html += `
+
+      <tr class="bg-white/5">
+
+      <td class="p-4">${order.name}</td>
+      <td class="p-4">${order.email}</td>
+      <td class="p-4">${order.product}</td>
+      <td class="p-4">${order.status}</td>
+      <td class="p-4">
+      ${new Date(order.createdAt).toLocaleDateString("en-GB")}
+      </td>
+
+      </tr>
+
+    `;
+  });
+
+  html += `</table>`;
+
+  historyTable.innerHTML = html;
+}
+
+loadHistory();
+
+historyToggle.addEventListener("click", ()=>{
+
+  historySection.classList.toggle("hidden");
+});
+
+async function loadPopularProducts() {
+
+  const res =
+    await fetch("/popular-products");
+
+  const data = await res.json();
+
+  let html = `
+
+  <table class="w-full text-center overflow-hidden">
+
+  <tr class="bg-green-900/40 text-green-300">
+
+  <th class="p-4">Rank</th>
+  <th class="p-4">Product</th>
+  <th class="p-4">Category</th>
+  <th class="p-4">Sales</th>
+  <th class="p-4">Feedback</th>
+
+  </tr>
+
+  `;
+
+  data.forEach(p => {
+
+    html += `
+
+      <tr class="bg-white/5">
+
+      <td class="p-4">
+      ${p.rank || "-"}
+      </td>
+
+      <td class="p-4">
+      ${p.name}
+      </td>
+
+      <td class="p-4">
+      ${p.category}
+      </td>
+
+      <td class="p-4">
+      ${p.sales}
+      </td>
+
+      <td class="p-4">
+      ${p.feedback || "No feedback yet"}
+      </td>
+
+      </tr>
+
+    `;
+  });
+
+  html += `</table>`;
+
+  popularProducts.innerHTML = html;
+}
+
+loadPopularProducts();
+
+popularToggle.addEventListener("click", ()=>{
+
+  popularSection.classList.toggle("hidden");
+});
+
+chatToggle.addEventListener("click", ()=>{
+
+  chatContainer.classList.toggle("hidden");
+});
+
+closeChat.addEventListener("click", ()=>{
+
+  chatContainer.classList.add("hidden");
+});
+
+fullscreenChat.addEventListener("click", ()=>{
+
+  chatContainer.classList.toggle("chat-fullscreen");
+
+  chatContainer.classList.toggle("chat-solid");
+});
+
 chatInput.addEventListener("keypress", async e => {
-  if(e.key === "Enter"){
+
+  if (e.key === "Enter") {
+
     const msg = chatInput.value;
 
-    chatBox.innerHTML += `<div>> ${msg}</div>`;
+    if (!msg.trim()) return;
 
-    const res = await fetch("/chat",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({message: msg})
-    });
+    chatBox.innerHTML += `
+
+      <div class="flex justify-end">
+
+      <div class="bg-green-500 text-black px-4 py-2 rounded-2xl max-w-[80%]">
+      ${msg}
+      </div>
+
+      </div>
+
+    `;
+
+    const res =
+      await fetch("/chat", {
+
+        method:"POST",
+
+        headers:{
+          "Content-Type":"application/json"
+        },
+
+        body: JSON.stringify({
+          message:msg
+        })
+
+      });
 
     const data = await res.json();
 
-    chatBox.innerHTML += `<div style="color:lightgreen;">${data.reply}</div>`;
-    chatInput.value="";
+    chatBox.innerHTML += `
+
+      <div class="flex justify-start">
+
+      <div class="bg-white/10 text-green-100 px-4 py-2 rounded-2xl max-w-[80%]">
+      ${data.reply}
+      </div>
+
+      </div>
+
+    `;
+
+    chatBox.scrollTop =
+      chatBox.scrollHeight;
+
+    chatInput.value = "";
   }
 });
-
-load();
 
 </script>
 
